@@ -22,6 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 "public/bg.mp4" 
 "ZIJINZIJIN.zip" 
 "ZIJINZIJIN.zip" 
@@ -30,3 +31,5 @@ dist-ssr
 "node_modules/"
 ssh-ed25519*
 .pub
+=======
+>>>>>>> 83f28f86f3a00f1450e63023ba66ce5818527a7f
