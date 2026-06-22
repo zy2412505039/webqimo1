@@ -27,4 +27,6 @@ dist-ssr
 "ZIJINZIJIN.zip" 
 "public/bg.mp4" 
 "ZIJINZIJIN.zip" 
-"node_modules/" 
+"node_modules/"
+ssh-ed25519*
+.pub
