@@ -1,0 +1,18 @@
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        // 第一步：上下翻转每行
+        reverse(matrix.begin(), matrix.end());
+        // 第二步：主对角线交换
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                swap(matrix[i][j], matrix[j][i]);
+            }
+        }
+    }
+};

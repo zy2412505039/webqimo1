@@ -1,0 +1,30 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+private:
+    int partition(vector<int>& nums, int l, int r) {
+        int pivot = nums[r];
+        int i = l;
+        for (int j = l; j < r; ++j) {
+            if (nums[j] <= pivot) {
+                swap(nums[i], nums[j]);
+                i++;
+            }
+        }
+        swap(nums[i], nums[r]);
+        return i;
+    }
+    int quickSelect(vector<int>& nums, int l, int r, int target) {
+        int pos = partition(nums, l, r);
+        if (pos == target) return nums[pos];
+        else if (pos < target) return quickSelect(nums, pos + 1, r, target);
+        else return quickSelect(nums, l, pos - 1, target);
+    }
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int n = nums.size();
+        int target = n - k;
+        return quickSelect(nums, 0, n - 1, target);
+    }
+};

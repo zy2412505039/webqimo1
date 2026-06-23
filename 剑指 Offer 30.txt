@@ -1,0 +1,30 @@
+/**
+ * @param {Function} fn
+ * @return {Function}
+ */
+function memoize(fn) {
+    // 缓存：key是参数拼接字符串，value是计算结果
+    const cache = new Map();
+    // 记录原函数真实调用次数
+    let callCount = 0;
+
+    const memoizedFn = function (...args) {
+        // 将参数数组转为唯一标识字符串
+        const key = args.join(',');
+        if (cache.has(key)) {
+            return cache.get(key);
+        }
+        // 未命中缓存，执行原函数
+        const res = fn(...args);
+        cache.set(key, res);
+        callCount++;
+        return res;
+    };
+
+    // 挂载获取调用次数的方法
+    memoizedFn.getCallCount = function () {
+        return callCount;
+    };
+
+    return memoizedFn;
+}

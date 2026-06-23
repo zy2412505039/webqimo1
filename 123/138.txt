@@ -1,0 +1,24 @@
+#include <unordered_map>
+using namespace std;
+
+// 平台已内置Node定义，不要重复写
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        unordered_map<Node*, Node*> mp;
+        Node* cur = head;
+        // 1. 创建所有拷贝节点，建立原节点→拷贝节点映射
+        while(cur) {
+            mp[cur] = new Node(cur->val);
+            cur = cur->next;
+        }
+        cur = head;
+        // 2. 填充拷贝节点的next与random指针
+        while(cur) {
+            mp[cur]->next = mp[cur->next];
+            mp[cur]->random = mp[cur->random];
+            cur = cur->next;
+        }
+        return mp[head];
+    }
+};

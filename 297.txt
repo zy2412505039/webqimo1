@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+#include <string>
+#include <queue>
+#include <vector>
+#include <sstream>
+using namespace std;
+
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root) return "";
+        queue<TreeNode*> q;
+        q.push(root);
+        string res;
+        while (!q.empty()) {
+            TreeNode* cur = q.front();
+            q.pop();
+            if (cur) {
+                res += to_string(cur->val) + ",";
+                q.push(cur->left);
+                q.push(cur->right);
+            } else {
+                res += "#,";
+            }
+        }
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if (data.empty()) return nullptr;
+        // 分割字符串
+        vector<string> arr;
+        stringstream ss(data);
+        string tmp;
+        while (getline(ss, tmp, ',')) {
+            arr.push_back(tmp);
+        }
+        // 构建根节点
+        TreeNode* root = new TreeNode(stoi(arr[0]));
+        queue<TreeNode*> q;
+        q.push(root);
+        int idx = 1;
+        while (!q.empty() && idx < arr.size()) {
+            TreeNode* cur = q.front();
+            q.pop();
+            // 左孩子
+            if (arr[idx] != "#") {
+                cur->left = new TreeNode(stoi(arr[idx]));
+                q.push(cur->left);
+            }
+            idx++;
+            // 右孩子
+            if (arr[idx] != "#") {
+                cur->right = new TreeNode(stoi(arr[idx]));
+                q.push(cur->right);
+            }
+            idx++;
+        }
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));

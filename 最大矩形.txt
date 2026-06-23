@@ -1,0 +1,46 @@
+#include <vector>
+#include <stack>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    int maximalRectangle(vector<string>& matrix) {
+        if (matrix.empty() || matrix[0].empty()) return 0;
+        int cols = matrix[0].size();
+        vector<int> heights(cols, 0);
+        int maxArea = 0;
+
+        for (string& row : matrix) {
+            // 更新当前行对应的柱状高度
+            for (int j = 0; j < cols; j++) {
+                if (row[j] == '1') heights[j]++;
+                else heights[j] = 0;
+            }
+            // 计算当前柱状图最大面积
+            maxArea = max(maxArea, largestRectangleArea(heights));
+        }
+        return maxArea;
+    }
+
+private:
+    // 复用柱状图最大矩形单调栈函数
+    int largestRectangleArea(vector<int>& h) {
+        stack<int> st;
+        int res = 0;
+        h.push_back(0); // 哨兵
+        int n = h.size();
+        for (int i = 0; i < n; i++) {
+            while (!st.empty() && h[i] < h[st.top()]) {
+                int height = h[st.top()];
+                st.pop();
+                int left = st.empty() ? -1 : st.top();
+                int width = i - left - 1;
+                res = max(res, height * width);
+            }
+            st.push(i);
+        }
+        h.pop_back(); // 恢复原数组，不影响下一轮计算
+        return res;
+    }
+};

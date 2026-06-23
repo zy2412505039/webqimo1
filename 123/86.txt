@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        // 两条虚拟链表头
+        ListNode* smallDummy = new ListNode(0);
+        ListNode* largeDummy = new ListNode(0);
+        ListNode* smallTail = smallDummy;
+        ListNode* largeTail = largeDummy;
+
+        ListNode* cur = head;
+        while (cur != nullptr) {
+            if (cur->val < x) {
+                // 接入小数链表
+                smallTail->next = cur;
+                smallTail = smallTail->next;
+            } else {
+                // 接入大数链表
+                largeTail->next = cur;
+                largeTail = largeTail->next;
+            }
+            cur = cur->next;
+        }
+        // 切断大数链表尾部，避免循环链表
+        largeTail->next = nullptr;
+        // 拼接：小数链表尾连接大数链表头
+        smallTail->next = largeDummy->next;
+        return smallDummy->next;
+    }
+};

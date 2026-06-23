@@ -1,0 +1,33 @@
+#include <vector>
+#include <deque>
+using namespace std;
+
+class Solution {
+public:
+    int shortestSubarray(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<long long> preSum(n + 1, 0);
+        // 计算前缀和，用long long防溢出
+        for (int i = 0; i < n; ++i) {
+            preSum[i + 1] = preSum[i] + nums[i];
+        }
+
+        deque<int> dq;
+        int minLen = n + 1; // 初始设为不可能的最大值
+
+        for (int r = 0; r <= n; ++r) {
+            // 队首满足差值≥k，更新答案并弹出
+            while (!dq.empty() && preSum[r] - preSum[dq.front()] >= k) {
+                minLen = min(minLen, r - dq.front());
+                dq.pop_front();
+            }
+            // 维护单调递增：弹出尾部更大/相等前缀和
+            while (!dq.empty() && preSum[r] <= preSum[dq.back()]) {
+                dq.pop_back();
+            }
+            dq.push_back(r);
+        }
+        // 不存在合法子数组返回-1
+        return minLen == n + 1 ? -1 : minLen;
+    }
+};

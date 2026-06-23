@@ -1,0 +1,68 @@
+#include <string>
+#include <stack>
+#include <cctype>
+using namespace std;
+
+class Solution {
+public:
+    int calculate(string s) {
+        stack<int> numSt;
+        stack<char> opSt;
+        int n = s.size();
+        for (int i = 0; i < n; ++i) {
+            char c = s[i];
+            if (c == ' ') continue;
+
+            // 1. 读取完整数字
+            if (isdigit(c)) {
+                long num = 0;
+                while (i < n && isdigit(s[i])) {
+                    num = num * 10 + (s[i] - '0');
+                    i++;
+                }
+                numSt.push((int)num);
+                i--;
+            }
+            // 2. 左括号直接入符号栈
+            else if (c == '(') {
+                opSt.push(c);
+            }
+            // 3. 右括号，计算到匹配左括号
+            else if (c == ')') {
+                while (opSt.top() != '(') {
+                    calc(numSt, opSt);
+                }
+                opSt.pop(); // 弹出左括号
+            }
+            // 4. +、- 运算符处理
+            else {
+                // 处理一元负号：开头或左括号后出现 '-'
+                if (i == 0 || s[i - 1] == '(') {
+                    numSt.push(0);
+                }
+                // 栈内已有同级运算符，先计算
+                while (!opSt.empty() && opSt.top() != '(') {
+                    calc(numSt, opSt);
+                }
+                opSt.push(c);
+            }
+        }
+        // 遍历结束，处理栈中剩余运算符
+        while (!opSt.empty()) {
+            calc(numSt, opSt);
+        }
+        return numSt.top();
+    }
+
+private:
+    // 取出两个数字、一个运算符计算，结果压回数字栈
+    void calc(stack<int>& numSt, stack<char>& opSt) {
+        int b = numSt.top(); numSt.pop();
+        int a = numSt.top(); numSt.pop();
+        char op = opSt.top(); opSt.pop();
+        int res;
+        if (op == '+') res = a + b;
+        else res = a - b;
+        numSt.push(res);
+    }
+};

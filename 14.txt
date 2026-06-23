@@ -1,0 +1,22 @@
+#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        if (strs.empty()) return "";
+        string ans = "";
+        int len = strs[0].size();
+        for (int i = 0; i < len; ++i) {
+            char c = strs[0][i];
+            for (auto& s : strs) {
+                if (i >= s.size() || s[i] != c) {
+                    return ans;
+                }
+            }
+            ans += c;
+        }
+        return ans;
+    }
+};

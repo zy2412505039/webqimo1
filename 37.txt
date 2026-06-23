@@ -1,0 +1,53 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        backtrack(board);
+    }
+
+private:
+    bool backtrack(vector<vector<char>>& board) {
+        // 遍历棋盘
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] == '.') {
+                    // 尝试1~9
+                    for (char c = '1'; c <= '9'; ++c) {
+                        if (isValid(board, i, j, c)) {
+                            board[i][j] = c;
+                            if (backtrack(board)) {
+                                return true; // 找到解，直接返回
+                            }
+                            board[i][j] = '.'; // 回溯撤销
+                        }
+                    }
+                    return false; // 所有数字都不行，无解
+                }
+            }
+        }
+        return true; // 无空白格，填充完成
+    }
+
+    // 判断在(i,j)填入字符c是否合法
+    bool isValid(vector<vector<char>>& board, int i, int j, char c) {
+        // 校验同一行
+        for (int col = 0; col < 9; ++col) {
+            if (board[i][col] == c) return false;
+        }
+        // 校验同一列
+        for (int row = 0; row < 9; ++row) {
+            if (board[row][j] == c) return false;
+        }
+        // 校验3×3九宫格
+        int boxRow = i / 3 * 3;
+        int boxCol = j / 3 * 3;
+        for (int x = boxRow; x < boxRow + 3; ++x) {
+            for (int y = boxCol; y < boxCol + 3; ++y) {
+                if (board[x][y] == c) return false;
+            }
+        }
+        return true;
+    }
+};

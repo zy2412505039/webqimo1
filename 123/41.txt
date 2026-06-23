@@ -1,0 +1,30 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int n = nums.size();
+        // 第一步：把 [1,n] 以外的数替换成 n+1
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] < 1 || nums[i] > n) {
+                nums[i] = n + 1;
+            }
+        }
+        // 第二步：用负数标记数字已存在
+        for (int i = 0; i < n; ++i) {
+            int x = abs(nums[i]);
+            if (x <= n) {
+                nums[x - 1] = -abs(nums[x - 1]);
+            }
+        }
+        // 第三步：找到第一个未被标记的位置
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+        // 1~n 全部存在，答案是 n+1
+        return n + 1;
+    }
+};

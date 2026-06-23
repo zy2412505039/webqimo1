@@ -1,0 +1,60 @@
+#include <vector>
+#include <unordered_map>
+#include <string>
+using namespace std;
+
+class Solution {
+private:
+    unordered_map<string, string> parent;
+    unordered_map<string, double> weight;
+
+    string find(string x) {
+        if (parent[x] != x) {
+            string oriP = parent[x];
+            string root = find(parent[x]);
+            parent[x] = root;
+            weight[x] *= weight[oriP];
+        }
+        return parent[x];
+    }
+
+public:
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        // 初始化并查集
+        for (int i = 0; i < equations.size(); ++i) {
+            string a = equations[i][0];
+            string b = equations[i][1];
+            double val = values[i];
+            if (!parent.count(a)) {
+                parent[a] = a;
+                weight[a] = 1.0;
+            }
+            if (!parent.count(b)) {
+                parent[b] = b;
+                weight[b] = 1.0;
+            }
+            string ra = find(a);
+            string rb = find(b);
+            if (ra != rb) {
+                parent[ra] = rb;
+                weight[ra] = val * weight[b] / weight[a];
+            }
+        }
+
+        vector<double> res;
+        for (auto& q : queries) {
+            string c = q[0], d = q[1];
+            if (!parent.count(c) || !parent.count(d)) {
+                res.push_back(-1.0);
+                continue;
+            }
+            string rc = find(c), rd = find(d);
+            if (rc != rd) {
+                res.push_back(-1.0);
+            } else {
+                res.push_back(weight[c] / weight[d]);
+            }
+        }
+        return res;
+    }
+};

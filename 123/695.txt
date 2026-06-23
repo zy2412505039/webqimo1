@@ -1,0 +1,36 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+private:
+    // 四个移动方向：上、下、左、右
+    int dirs[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+    int dfs(vector<vector<int>>& grid, int i, int j) {
+        int m = grid.size(), n = grid[0].size();
+        // 越界 或 当前是海水，面积0
+        if(i < 0 || i >= m || j <0 || j >= n || grid[i][j] == 0)
+            return 0;
+        grid[i][j] = 0; // 标记已访问，避免重复统计
+        int area = 1;
+        for(auto& d : dirs) {
+            area += dfs(grid, i + d[0], j + d[1]);
+        }
+        return area;
+    }
+public:
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int maxArea = 0;
+        int m = grid.size();
+        if(m == 0) return 0;
+        int n = grid[0].size();
+        for(int i = 0; i < m; ++i) {
+            for(int j = 0; j < n; ++j) {
+                if(grid[i][j] == 1) {
+                    int cur = dfs(grid, i, j);
+                    if(cur > maxArea) maxArea = cur;
+                }
+            }
+        }
+        return maxArea;
+    }
+};

@@ -1,0 +1,25 @@
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        string st; // 用字符串模拟单调栈
+        for (char c : num) {
+            // 栈非空、还有删除次数、栈顶大于当前字符，则弹出
+            while (!st.empty() && k > 0 && st.back() > c) {
+                st.pop_back();
+                k--;
+            }
+            st.push_back(c);
+        }
+        // 剩余k次删除，截掉末尾k位
+        if (k > 0) st = st.substr(0, st.size() - k);
+        // 去除前导零
+        int start = 0;
+        while (start < st.size() && st[start] == '0') start++;
+        string res = st.substr(start);
+        // 空串返回"0"
+        return res.empty() ? "0" : res;
+    }
+}

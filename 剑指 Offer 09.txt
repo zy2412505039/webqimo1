@@ -1,0 +1,20 @@
+/**
+ * @param {Function} fn
+ * @param {number} t milliseconds
+ * @return {Function}
+ */
+var debounce = function(fn, t) {
+    // 闭包保存定时器id
+    let timerId = null;
+    return function(...args) {
+        // 清除之前未执行的定时器
+        if (timerId !== null) {
+            clearTimeout(timerId);
+        }
+        // 新建延时任务
+        timerId = setTimeout(() => {
+            fn(...args);
+            timerId = null;
+        }, t);
+    }
+};

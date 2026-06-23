@@ -1,0 +1,54 @@
+#include <vector>
+using namespace std;
+
+class MyCircularQueue {
+private:
+    vector<int> arr;
+    int front;
+    int rear;
+    int cap;
+public:
+    // 构造：最大容纳k个元素，数组开k+1
+    MyCircularQueue(int k) {
+        cap = k;
+        arr.resize(k + 1);
+        front = 0;
+        rear = 0;
+    }
+    
+    // 入队，满则false
+    bool enQueue(int value) {
+        if (isFull()) return false;
+        arr[rear] = value;
+        rear = (rear + 1) % arr.size();
+        return true;
+    }
+    
+    // 出队，空则false
+    bool deQueue() {
+        if (isEmpty()) return false;
+        front = (front + 1) % arr.size();
+        return true;
+    }
+    
+    // 获取队首，空返回-1
+    int Front() {
+        if (isEmpty()) return -1;
+        return arr[front];
+    }
+    
+    // 获取队尾，空返回-1
+    int Rear() {
+        if (isEmpty()) return -1;
+        int idx = (rear - 1 + arr.size()) % arr.size();
+        return arr[idx];
+    }
+    
+    bool isEmpty() {
+        return front == rear;
+    }
+    
+    bool isFull() {
+        return (rear + 1) % arr.size() == front;
+    }
+};

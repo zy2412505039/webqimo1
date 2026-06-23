@@ -1,0 +1,37 @@
+#include <vector>
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        unordered_set<int> seen;
+        unordered_set<string> res;
+        vector<string> ans;
+        int map[256] = {0};
+        map['A'] = 0; map['C'] = 1; map['G'] = 2; map['T'] = 3;
+        int n = s.size();
+        if (n < 10) return ans;
+
+        int code = 0;
+        // 初始化前10位
+        for (int i = 0; i < 10; ++i) {
+            code = (code << 2) | map[s[i]];
+        }
+        seen.insert(code);
+        int mask = 0xFFFFF; // 20位掩码
+
+        for (int i = 10; i < n; ++i) {
+            // 去掉最左字符，加入新字符
+            code = ((code << 2) | map[s[i]]) & mask;
+            if (seen.count(code)) {
+                res.insert(s.substr(i - 9, 10));
+            } else {
+                seen.insert(code);
+            }
+        }
+        for (auto& str : res) ans.push_back(str);
+        return ans;
+    }
+};

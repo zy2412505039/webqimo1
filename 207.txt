@@ -1,0 +1,33 @@
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> adj(numCourses);
+        vector<int> inDegree(numCourses, 0);
+        // 建图：prereq [a,b]  b -> a
+        for (auto& edge : prerequisites) {
+            int a = edge[0], b = edge[1];
+            adj[b].push_back(a);
+            inDegree[a]++;
+        }
+        queue<int> q;
+        // 入度0入队
+        for (int i = 0; i < numCourses; ++i) {
+            if (inDegree[i] == 0) q.push(i);
+        }
+        int cnt = 0;
+        while (!q.empty()) {
+            int cur = q.front();
+            q.pop();
+            cnt++;
+            for (int next : adj[cur]) {
+                inDegree[next]--;
+                if (inDegree[next] == 0) q.push(next);
+            }
+        }
+        return cnt == numCourses;
+    }
+};

@@ -1,0 +1,21 @@
+#include <queue>
+using namespace std;
+
+class RecentCounter {
+private:
+    queue<int> q;
+public:
+    RecentCounter() {
+        // 构造函数，队列默认空
+    }
+    
+    int ping(int t) {
+        // 弹出超出[t-3000, t]范围的旧请求
+        while (!q.empty() && q.front() < t - 3000) {
+            q.pop();
+        }
+        q.push(t);
+        // 队列长度就是3000ms内请求总数
+        return q.size();
+    }
+};

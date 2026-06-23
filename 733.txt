@@ -1,0 +1,25 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int oldColor = image[sr][sc];
+        if (oldColor == color) return image;
+        dfs(image, sr, sc, oldColor, color);
+        return image;
+    }
+private:
+    void dfs(vector<vector<int>>& img, int x, int y, int old, int newC) {
+        int m = img.size(), n = img[0].size();
+        // 越界 或 不是待填充旧颜色，终止
+        if (x < 0 || x >= m || y < 0 || y >= n || img[x][y] != old)
+            return;
+        img[x][y] = newC;
+        // 上下左右
+        dfs(img, x - 1, y, old, newC);
+        dfs(img, x + 1, y, old, newC);
+        dfs(img, x, y - 1, old, newC);
+        dfs(img, x, y + 1, old, newC);
+    }
+};

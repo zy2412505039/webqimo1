@@ -1,0 +1,45 @@
+#include <stack>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<int> numSt;    // 存数字k
+        stack<string> strSt; // 存左括号前的字符串
+        string curStr;       // 当前正在拼接的子串
+        int curNum = 0;      // 当前解析的数字
+        
+        for (char c : s) {
+            // 1. 数字：拼接多位数
+            if (isdigit(c)) {
+                curNum = curNum * 10 + (c - '0');
+            }
+            // 2. 左括号：压栈，重置临时变量
+            else if (c == '[') {
+                numSt.push(curNum);
+                strSt.push(curStr);
+                curNum = 0;
+                curStr = "";
+            }
+            // 3. 右括号：出栈，重复拼接
+            else if (c == ']') {
+                int k = numSt.top();
+                numSt.pop();
+                string preStr = strSt.top();
+                strSt.pop();
+                // preStr + curStr重复k次
+                string temp;
+                for (int i = 0; i < k; ++i) {
+                    temp += curStr;
+                }
+                curStr = preStr + temp;
+            }
+            // 4. 普通字母，直接追加
+            else {
+                curStr += c;
+            }
+        }
+        return curStr;
+    }
+};

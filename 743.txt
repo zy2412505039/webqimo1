@@ -1,0 +1,38 @@
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        vector<vector<pair<int, int>>> adj(n + 1);
+        for (auto& e : times) {
+            int u = e[0], v = e[1], w = e[2];
+            adj[u].emplace_back(v, w);
+        }
+        vector<int> dist(n + 1, INT_MAX);
+        dist[k] = 0;
+        // 小根堆 pair<距离,节点>
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> q;
+        q.emplace(0, k);
+        
+        while (!q.empty()) {
+            auto [d, u] = q.top();
+            q.pop();
+            if (d > dist[u]) continue;
+            for (auto [v, w] : adj[u]) {
+                if (dist[v] > d + w) {
+                    dist[v] = d + w;
+                    q.emplace(dist[v], v);
+                }
+            }
+        }
+        int maxT = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (dist[i] == INT_MAX) return -1;
+            maxT = max(maxT, dist[i]);
+        }
+        return maxT;
+    }
+};

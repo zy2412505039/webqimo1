@@ -1,0 +1,35 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> mat(n, vector<int>(n, 0));
+        int top = 0, bottom = n - 1;
+        int left = 0, right = n - 1;
+        int num = 1, target = n * n;
+        while (num <= target) {
+            // 左到右 上边
+            for (int j = left; j <= right && num <= target; ++j)
+                mat[top][j] = num++;
+            top++;
+            // 上到下 右边
+            for (int i = top; i <= bottom && num <= target; ++i)
+                mat[i][right] = num++;
+            right--;
+            // 右到左 下边
+            if (top <= bottom) {
+                for (int j = right; j >= left && num <= target; --j)
+                    mat[bottom][j] = num++;
+                bottom--;
+            }
+            // 下到上 左边
+            if (left <= right) {
+                for (int i = bottom; i >= top && num <= target; --i)
+                    mat[i][left] = num++;
+                left++;
+            }
+        }
+        return mat;
+    }
+};

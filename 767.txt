@@ -1,0 +1,36 @@
+#include <string>
+#include <queue>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    string reorganizeString(string s) {
+        vector<int> cnt(26, 0);
+        int n = s.size();
+        int maxCnt = 0;
+        for (char c : s) {
+            cnt[c - 'a']++;
+            maxCnt = max(maxCnt, cnt[c - 'a']);
+        }
+        // 无法重构
+        if (maxCnt > (n + 1) / 2) return "";
+        // 大根堆 pair<次数,字符>
+        priority_queue<pair<int, char>> heap;
+        for (int i = 0; i < 26; ++i) {
+            if (cnt[i] > 0) heap.emplace(cnt[i], 'a' + i);
+        }
+        string res;
+        while (heap.size() >= 2) {
+            auto [c1, ch1] = heap.top(); heap.pop();
+            auto [c2, ch2] = heap.top(); heap.pop();
+            res += ch1;
+            res += ch2;
+            if (c1 - 1 > 0) heap.emplace(c1 - 1, ch1);
+            if (c2 - 1 > 0) heap.emplace(c2 - 1, ch2);
+        }
+        // 剩余最后一个字符
+        if (!heap.empty()) res += heap.top().second;
+        return res;
+    }
+};

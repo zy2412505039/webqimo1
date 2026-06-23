@@ -1,0 +1,32 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+private:
+    vector<int> parent;
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
+    void unite(int x, int y) {
+        x = find(x);
+        y = find(y);
+        if (x != y)
+            parent[y] = x;
+    }
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        parent.resize(n + 1); // 节点1~n
+        for (int i = 1; i <= n; ++i)
+            parent[i] = i;
+        for (auto& e : edges) {
+            int u = e[0], v = e[1];
+            if (find(u) == find(v))
+                return e;
+            unite(u, v);
+        }
+        return {};
+    }
+};

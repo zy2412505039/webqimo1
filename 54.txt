@@ -1,0 +1,36 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> res;
+        if (matrix.empty()) return res;
+        int top = 0, bottom = matrix.size() - 1;
+        int left = 0, right = matrix[0].size() - 1;
+
+        while (top <= bottom && left <= right) {
+            // 左→右 上边界
+            for (int j = left; j <= right; ++j)
+                res.push_back(matrix[top][j]);
+            top++;
+            // 上→下 右边界
+            for (int i = top; i <= bottom; ++i)
+                res.push_back(matrix[i][right]);
+            right--;
+            // 右→左 下边界（防止单行重复遍历）
+            if (top <= bottom) {
+                for (int j = right; j >= left; --j)
+                    res.push_back(matrix[bottom][j]);
+                bottom--;
+            }
+            // 下→上 左边界（防止单列重复遍历）
+            if (left <= right) {
+                for (int i = bottom; i >= top; --i)
+                    res.push_back(matrix[i][left]);
+                left++;
+            }
+        }
+        return res;
+    }
+};
